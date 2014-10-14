@@ -1,20 +1,33 @@
 from django.db import models
+import random
+from django.db.models.signals import post_init
 
-# Create your models here.
+class User(models.Model):
+  name = models.CharField(max_length=200)
+
+  def __unicode__(self):
+        return self.name
+
 class Game(models.Model):
   time = models.IntegerField(default=0)
   number_of_mines = models.IntegerField(default=0)
   difficulty = models.CharField(max_length=200)
   height = models.IntegerField(default=0)
   width = models.IntegerField(default=0)
-  mine_field = models.CharField(max_length=100000)
+  mine_field = models.CharField(max_length=100000, default="")
+  user = models.ForeignKey(User)
+  won = models.BooleanField(default=False)
+  lost = models.BooleanField(default=False)
 
-  def __init__(self, x, y, number_of_mines):
-    self.number_of_mines = number_of_mines
-    self.width = x
-    self.height = y
-    self.mine_field = create_minefield()
+  # initialize a new game object setting the minefield
+  # def __init__(self, x, y, number_of_mines, difficulty):
+  #   self.number_of_mines = number_of_mines
+  #   self.width = x
+  #   self.height = y
+  #   self.mine_field = self._create_minefield()
+  #   self.difficulty = difficulty
 
+  # convert the Array that maps the minefield to a String
   def _minefield_array_to_char(self, mine_field):
     mine_field_string = ""
     for x in range(0, self.height):
@@ -22,26 +35,37 @@ class Game(models.Model):
         mine_field_string += mine_field[x][y]
     return mine_field_string
 
-#  def get_minefield_array(self):
-
-
-  def _create_minefield(self):
+  #  convert the stored string representation of the minefield an array
+  def get_minefield_array(self):
+    char = 0
     mine_field = []
     for x in range(0, self.height):
+      row = []
       for y in range(0, self.width):
-        mine_field[x][y] = 0
+        row.append(self.mine_field[char])
+        char += 1
+      mine_field.append(row)
+    return mine_field
+
+  # Creates the minefield and returns the string representation
+  def create_minefield(self):
+    mine_field = []
+    for x in range(0, self.height):
+      row = []
+      for y in range(0, self.width):
+        row.append('E')
+      mine_field.append(row)
 
     for n in range(0,self.number_of_mines):
 
       while True:
-        x = randint(0, self.height)
-        y = randint(0, self.width)
-        if mine_field[x][y] != 1:
-          mine_field[x][y] = 1
+        x = random.randint(0, self.height -1)
+        y = random.randint(0, self.width -1)
+        if mine_field[x][y] != 'M':
+          mine_field[x][y] = 'M'
           break
-    return _minefield_array_to_char(mine_field)
 
+    self.mine_field = self._minefield_array_to_char(mine_field)
 
-class User(models.Model):
-  name = models.CharField(max_length=200)
-  game = models.ForeignKey(Game)
+    def __unicode__(self):
+        return self.difficulty
