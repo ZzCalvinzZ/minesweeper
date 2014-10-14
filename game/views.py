@@ -34,6 +34,17 @@ def index(request):
   return render(request, 'index.html', {'form': form})
 
 def game_start(request, name, game_id):
+  #get the current game from the passed in game id
+  game = Game.objects.get(id=game_id)
+  game_number = Game.objects.filter(user__name=name).count()
 
-
-  return render (request, 'game.html',{'name': name, 'game_id': game_id})
+  game_data = {
+    'name': name,
+    'mines': game.number_of_mines,
+    'difficulty': game.difficulty,
+    'height': game.height,
+    'width': game.width,
+    'mine_field': game.get_minefield_array(),
+    'game_number': game_number
+  }
+  return render (request, 'game.html', game_data)

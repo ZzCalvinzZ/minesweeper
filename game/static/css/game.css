@@ -1,0 +1,50 @@
+table {
+    border-collapse:collapse;
+}
+
+td {
+  width: 25px;
+  height: 25px;
+}
+
+.closed {
+  border: outset 4px #5980E2;
+  background-color: #29458E;
+
+}
+
+.flag {
+
+}
+
+.empty {
+
+}
+
+.empty1 {
+
+}
+
+.empty2 {
+
+}
+
+.empty3 {
+
+}
+
+.empty4 {
+
+}
+
+.empty5 {
+
+}
+
+.empty6 {
+
+}
+
+.mine {
+
+}

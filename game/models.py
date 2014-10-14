@@ -30,9 +30,9 @@ class Game(models.Model):
   # convert the Array that maps the minefield to a String
   def _minefield_array_to_char(self, mine_field):
     mine_field_string = ""
-    for x in range(0, self.height):
-      for y in range(0, self.width):
-        mine_field_string += mine_field[x][y]
+    for row in mine_field:
+      for field in row:
+        mine_field_string += field
     return mine_field_string
 
   #  convert the stored string representation of the minefield an array

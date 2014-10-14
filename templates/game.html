@@ -3,9 +3,17 @@
 {% block content %}
 <div class='game'>
   <h1 class='title'>
-    {{name}}'s game number {{game}} 
+    {{name}}'s game number {{game_number}} 
     <table class = 'mine-field'>
       <tbody>
+        {% for row in mine_field %}
+        <tr>
+          {% for field in row %}
+          <td class='closed'>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </h1>
