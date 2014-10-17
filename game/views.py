@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from game.forms import GameForm
 from game.models import Game, User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+from django.utils import simplejson as json
 
 def index(request):
   if request.method == 'POST':
@@ -38,8 +39,10 @@ def game_start(request, name, game_id):
   game = Game.objects.get(id=game_id)
   game_number = Game.objects.filter(user__name=name).count()
 
-  game_data = {
+  #save game info as session data for easy retrieval
+  request.session['game_data'] = {
     'name': name,
+    'game_id' : game_id,
     'mines': game.number_of_mines,
     'difficulty': game.difficulty,
     'height': game.height,
@@ -47,4 +50,21 @@ def game_start(request, name, game_id):
     'mine_field': game.get_minefield_array(),
     'game_number': game_number
   }
-  return render (request, 'game.html', game_data)
+  return render (request, 'game.html', request.session['game_data'])
+
+def game_check(request, name, game_id):
+  #get the current game data from session
+  game_data = request.session['game_data']
+  game = Game.objects.get(id=game_id)
+
+  x = int(request.GET.get('x'))
+  y = int(request.GET.get('y'))
+
+  if check_for_mine(x, y, game_data):
+    lost = true
+  else:
+    reveal(x, y, game_data)  
+
+
+  if request.session['game_data']:
+    return HttpResponse(json.dumps({'test': 'it works'}), mimetype='application/json')

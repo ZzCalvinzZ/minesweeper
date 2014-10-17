@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block links %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/game.css">
+<script type="text/javascript" src="{{STATIC_URL}}js/game.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class='game'>
   <h1 class='title'>

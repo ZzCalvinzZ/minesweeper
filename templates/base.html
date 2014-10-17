@@ -4,9 +4,10 @@
 <title>Minesweeper</title>
 {% load staticfiles %}
 
-<link rel="stylesheet" href="{% static "css/foundation.css" %}">
-<link rel="stylesheet" href="{% static "css/game.css" %}">
+<link rel="stylesheet" href="{{STATIC_URL}}css/foundation.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+{% block links %} {% endblock %}
 </head>
 
 <body>

@@ -7,6 +7,9 @@ td {
   height: 25px;
 }
 
+.mine-field{
+  
+}
 .closed {
   border: outset 4px #5980E2;
   background-color: #29458E;
@@ -18,7 +21,8 @@ td {
 }
 
 .empty {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty1 {
