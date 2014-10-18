@@ -43,8 +43,20 @@
         var $cell = $('#mine-field tbody tr:eq('+j+') td:eq('+i+')');
         var responseCell = response.revealed_matrix[i][j];
         if ($cell.attr('class') !== responseCell.attr) {
-          $cell.removeClass().addClass(responseCell.attr)
+          setNewAttr($cell, responseCell);
         }
+      }
+    }
+  }
+
+  function setNewAttr($cell, responseCell){
+    $cell.removeClass().addClass(responseCell.attr)
+
+    //if cell is empty show how many mines are nearby
+    if ($cell.attr('class').slice(0,5) === 'empty'){
+      var noOfMines = $cell.attr('class').slice(-1);
+      if (noOfMines !== '0'){
+        $cell.text(noOfMines);
       }
     }
   }

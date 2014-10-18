@@ -64,16 +64,17 @@ def game_check(request, name, game_id):
   game_data = request.session['game_data']
   game = Game.objects.get(id=game_id)
 
-
   x = int(request.GET.get('x'))
   y = int(request.GET.get('y'))
 
   if mine_exists(x, y, game_data):
     game_data['revealed_matrix'][x][y]['attr'] = 'mine'
     game_data['lost'] = True
-    print"bopabooyayayayayayatrallalalalalalalal"
+    game.lost += 1
   else:
     game_data['revealed_matrix'][x][y]['attr'] = 'empty0'
-    reveal(x, y, game_data)  
+    reveal(x, y, game_data) 
+  
+  request.session['game_data'] = game_data
 
   return HttpResponse(json.dumps(game_data), mimetype='application/json')
