@@ -1,9 +1,13 @@
  $(document).ready(function() {
 
+  var lost = false
+  var win = false
+
   $('#mine-field tbody tr td').click(function (e){
     var target = e.target;
-    var y = target.parentNode.rowIndex;
-    var x = target.cellIndex;
+    //note x is row because the minefield is mapped as an array
+    var x = target.parentNode.rowIndex;
+    var y = target.cellIndex;
 
     if ($(target).hasClass('closed')) {
       check(x, y);
@@ -19,17 +23,19 @@
         y: y
       },
       success: function(response){
-        console.log(response)
-        if (response.lost == true){
-          // gameLost();
-        } 
+        if (lost == false && win == false){
+          if (response.lost == true){
+            lost = true
+            gameLost();
+          } 
 
-        if (response.won == true){
-          // gameWon();
+          if (response.won == true){
+            // win = true
+            // gameWon();
+          } 
+
+          remap(response);        
         }
-
-        remap(response);        
-
       },
       error: function(response){
         alert(response.test);
@@ -40,7 +46,7 @@
   function remap(response){
     for (var i=0; i<response.height; i++){
       for (var j=0; j<response.width; j++){
-        var $cell = $('#mine-field tbody tr:eq('+j+') td:eq('+i+')');
+        var $cell = $('#mine-field tbody tr:eq('+i+') td:eq('+j+')');
         var responseCell = response.revealed_matrix[i][j];
         if ($cell.attr('class') !== responseCell.attr) {
           setNewAttr($cell, responseCell);
@@ -59,5 +65,13 @@
         $cell.text(noOfMines);
       }
     }
+    if ($cell.attr('class') === 'mine'){
+      $cell.text('@')
+    }
+  }
+
+  function gameLost(){
+    // $('#complete #result').text("You Lose! Sorry about that, perhaps another try?")
+    $('#complete').html("<p>You Lose! Sorry about that,<a href='/'>click here</a> to try again</p>")
   }
 });

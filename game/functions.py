@@ -46,7 +46,7 @@ def reveal_outer_cell(x, y, game_data):
       reveal(x, y, game_data)
 
 def out_of_bounds(x, y, game_data):
-  if (x < 0 or x >= game_data['width']) or (y < 0 or y >= game_data['height']):
+  if (x < 0 or x >= game_data['height']) or (y < 0 or y >= game_data['width']):
     return True
   else:
     return False

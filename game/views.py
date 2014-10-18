@@ -41,6 +41,9 @@ def game_start(request, name, game_id):
   game = Game.objects.get(id=game_id)
   game_number = Game.objects.filter(user__name=name).count()
 
+  print game.lost
+  if game.won or game.lost:
+    HttpResponseRedirect(reverse('index'))
   #save game info as session data for easy retrieval
   request.session['game_data'] = {
     'name': name,
@@ -70,11 +73,13 @@ def game_check(request, name, game_id):
   if mine_exists(x, y, game_data):
     game_data['revealed_matrix'][x][y]['attr'] = 'mine'
     game_data['lost'] = True
-    game.lost += 1
+
+    game.lost = True
+    game.save()
   else:
     game_data['revealed_matrix'][x][y]['attr'] = 'empty0'
     reveal(x, y, game_data) 
-  
+
   request.session['game_data'] = game_data
 
   return HttpResponse(json.dumps(game_data), mimetype='application/json')

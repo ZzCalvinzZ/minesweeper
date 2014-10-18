@@ -5,11 +5,18 @@ table {
 td {
   width: 25px;
   height: 25px;
+  vertical-align: middle;
+  text-align: center;
 }
 
 #mine-field{
   
 }
+
+#complete{
+
+}
+
 .closed {
   border: outset 4px #5980E2;
   background-color: #29458E;
@@ -61,8 +68,11 @@ td {
 .empty8 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+
 }
 
 .mine {
+  border: solid 2px #5980E2;
+  background-color: #C71818;
 
 }

@@ -6,21 +6,24 @@
 {% endblock %}
 
 {% block content %}
-<div class='game'>
+<div id='game'>
   <h1 class='title'>
     {{name}}'s game number {{game_number}} 
-    <table id = 'mine-field'>
-      <tbody>
-        {% for row in mine_field %}
-        <tr>
-          {% for field in row %}
-          <td class='closed'>
-          </td>
-          {% endfor %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
   </h1>
+  <table id = 'mine-field'>
+    <tbody>
+      {% for row in mine_field %}
+      <tr>
+        {% for field in row %}
+        <td class='closed'>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div id='complete'>
 </div>
 {% endblock %}
