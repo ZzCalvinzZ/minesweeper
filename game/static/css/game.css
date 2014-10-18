@@ -7,7 +7,7 @@ td {
   height: 25px;
 }
 
-.mine-field{
+#mine-field{
   
 }
 .closed {
@@ -20,33 +20,39 @@ td {
 
 }
 
-.empty {
+.empty0 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
 }
 
 .empty1 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty2 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty3 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty4 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty5 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .empty6 {
-
+  border: solid 2px #5980E2;
+  background-color: #BCBCFF;
 }
 
 .mine {

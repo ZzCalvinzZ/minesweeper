@@ -51,7 +51,9 @@ def game_start(request, name, game_id):
     'width': game.width,
     'mine_field': game.get_minefield_array(),
     'revealed_matrix': create_revealed_matrix(game.height, game.width),
-    'game_number': game_number
+    'game_number': game_number,
+    'won' : False,
+    'lost': False
   }
 
   request.session['tested_coords'] = []
@@ -67,10 +69,11 @@ def game_check(request, name, game_id):
   y = int(request.GET.get('y'))
 
   if mine_exists(x, y, game_data):
-    lost = True
+    game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+    game_data['lost'] = True
     print"bopabooyayayayayayatrallalalalalalalal"
   else:
     game_data['revealed_matrix'][x][y]['attr'] = 'empty0'
     reveal(x, y, game_data)  
 
-    return HttpResponse(json.dumps(game_data['revealed_matrix']), mimetype='application/json')
+  return HttpResponse(json.dumps(game_data), mimetype='application/json')

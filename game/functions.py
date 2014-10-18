@@ -18,12 +18,21 @@ def mine_exists(x, y, game_data):
 #reveals the blocks around the current block
 def reveal(x, y, game_data):
   coords = get_coords(x,y)
+  recurse_more = True
+
+  #first check if a mine exists anywhere adjacent
   for pair in coords:
     if not out_of_bounds(pair[0], pair[1], game_data):
-
-      reveal_outer_cell(pair[0], pair[1], game_data)
-      if game_data['mine_field'][pair[0]][pair[1]] == 'M':
+      if mine_exists(pair[0], pair[1], game_data):
         game_data['revealed_matrix'][x][y]['count'] += 1
+        recurse_more = False
+
+  #recurse further out only if there is no adjacent mine
+  if recurse_more:      
+    for pair in coords:
+      if not out_of_bounds(pair[0], pair[1], game_data):
+        reveal_outer_cell(pair[0], pair[1], game_data)
+
 
   game_data['revealed_matrix'][x][y]['attr'] = 'empty' + str(game_data['revealed_matrix'][x][y]['count'])
 
@@ -31,7 +40,7 @@ def reveal(x, y, game_data):
 def reveal_outer_cell(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
     if mine_exists(x, y, game_data):
-      game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+      return
     else:
       game_data['revealed_matrix'][x][y]['attr'] = 'empty'
       reveal(x, y, game_data)
