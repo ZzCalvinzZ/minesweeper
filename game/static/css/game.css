@@ -35,39 +35,47 @@ td {
 .empty1 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: blue;
 }
 
 .empty2 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: green;
 }
 
 .empty3 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: red;
 }
 
 .empty4 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: purple;
 }
 
 .empty5 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: #302013;
 }
 
 .empty6 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: #00FFFF;
 }
 .empty7 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: black;
 }
 .empty8 {
   border: solid 2px #5980E2;
   background-color: #BCBCFF;
+  color: #696969;
 
 }
 

@@ -1,3 +1,4 @@
+# Creates the matrix that keeps track of whats been revealed
 def create_revealed_matrix(height, width):
   revealed_matrix = []
   for x in range(0, height):
@@ -33,9 +34,10 @@ def reveal(x, y, game_data):
       if not out_of_bounds(pair[0], pair[1], game_data):
         reveal_outer_cell(pair[0], pair[1], game_data)
 
-
+  if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
+    game_data['fields_left'] -= 1
   game_data['revealed_matrix'][x][y]['attr'] = 'empty' + str(game_data['revealed_matrix'][x][y]['count'])
-
+  
 #reveals an outer_block then calls to reveal more outer blocks
 def reveal_outer_cell(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
@@ -43,6 +45,7 @@ def reveal_outer_cell(x, y, game_data):
       return
     else:
       game_data['revealed_matrix'][x][y]['attr'] = 'empty'
+      game_data['fields_left'] -= 1
       reveal(x, y, game_data)
 
 def out_of_bounds(x, y, game_data):

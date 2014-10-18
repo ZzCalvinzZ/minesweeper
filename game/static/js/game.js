@@ -30,8 +30,8 @@
           } 
 
           if (response.won == true){
-            // win = true
-            // gameWon();
+            win = true
+            gameWon();
           } 
 
           remap(response);        
@@ -71,7 +71,10 @@
   }
 
   function gameLost(){
-    // $('#complete #result').text("You Lose! Sorry about that, perhaps another try?")
     $('#complete').html("<p>You Lose! Sorry about that,<a href='/'>click here</a> to try again</p>")
+  }
+
+  function gameWon(){
+    $('#complete').html("<p>You Win! Congratulations,<a href='/'>click here</a> to try again</p>")
   }
 });
