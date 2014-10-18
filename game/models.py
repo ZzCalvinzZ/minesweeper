@@ -44,8 +44,8 @@ class Game(models.Model):
       for y in range(0, self.width):
         row.append(self.mine_field[char])
         char += 1
-      mine_field.append(row)
-    return mine_field
+      mine_field.append(row)  
+    return tuple(mine_field)
 
   # Creates the minefield and returns the string representation
   def create_minefield(self):
@@ -67,5 +67,5 @@ class Game(models.Model):
 
     self.mine_field = self._minefield_array_to_char(mine_field)
 
-    def __unicode__(self):
-        return self.difficulty
+  def __unicode__(self):
+    return self.difficulty

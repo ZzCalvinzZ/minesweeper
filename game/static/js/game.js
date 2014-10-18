@@ -19,7 +19,7 @@
         y: y
       },
       success: function(response){
-        alert(response.test)
+        alert(response)
       },
       error: function(response){
         alert(response.test)

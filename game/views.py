@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 from game.forms import GameForm
 from game.models import Game, User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
+from game.functions import reveal, mine_exists, create_revealed_matrix
 
 def index(request):
   if request.method == 'POST':
@@ -27,8 +29,8 @@ def index(request):
       game.save()
 
       #redirect to the game page
-      url = '/game/'+ user.name + '/' + str(game.id)
-      return HttpResponseRedirect(url)
+      args = {'name': user.name, 'game_id': str(game.id)}
+      return HttpResponseRedirect(reverse('game_start', kwargs=args))
   else:
     form = GameForm()
 
@@ -48,8 +50,11 @@ def game_start(request, name, game_id):
     'height': game.height,
     'width': game.width,
     'mine_field': game.get_minefield_array(),
+    'revealed_matrix': create_revealed_matrix(game.height, game.width),
     'game_number': game_number
   }
+
+  request.session['tested_coords'] = []
   return render (request, 'game.html', request.session['game_data'])
 
 def game_check(request, name, game_id):
@@ -57,14 +62,15 @@ def game_check(request, name, game_id):
   game_data = request.session['game_data']
   game = Game.objects.get(id=game_id)
 
+
   x = int(request.GET.get('x'))
   y = int(request.GET.get('y'))
 
-  if check_for_mine(x, y, game_data):
-    lost = true
+  if mine_exists(x, y, game_data):
+    lost = True
+    print"bopabooyayayayayayatrallalalalalalalal"
   else:
+    game_data['revealed_matrix'][x][y]['attr'] = 'empty0'
     reveal(x, y, game_data)  
 
-
-  if request.session['game_data']:
-    return HttpResponse(json.dumps({'test': 'it works'}), mimetype='application/json')
+    return HttpResponse(json.dumps(game_data['revealed_matrix']), mimetype='application/json')
