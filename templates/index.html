@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 
+{% block links %}
+<link rel="stylesheet" href="{{STATIC_URL}}css/index.css">
+{% endblock %}
+
 {% block content %}
+
 <h1>Please Enter your Name!</h1>
-<form action="/" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
-</form>
+<div class="row">
+  <div class="small-6 small-centered columns">
+    <form action="/" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <div>
+        <input type="submit" value="Submit" />
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

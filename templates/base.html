@@ -1,16 +1,18 @@
 
 <html>
-<head>
-<title>Minesweeper</title>
-{% load staticfiles %}
+  <head>
+    <title>Minesweeper</title>
+    {% load staticfiles %}
 
-<link rel="stylesheet" href="{{STATIC_URL}}css/foundation.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{STATIC_URL}}css/foundation.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/base.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-{% block links %} {% endblock %}
-</head>
-
-<body>
-{% block content%}{% endblock %}
-</body>
+    {% block links %} {% endblock %}
+  </head>
+  <div>
+    <body>
+      {% block content%}{% endblock %}
+    </body>
+  </div>
 </html>

@@ -1,5 +1,6 @@
 table {
     border-collapse:collapse;
+    margin: 0 auto;
 }
 
 td {
@@ -12,9 +13,16 @@ td {
 #mine-field{
   
 }
-
+p {
+  text-align: center;
+  font-size: 25px
+}
 #complete{
+  /*margin: 0 auto;*/
+}
 
+.title {
+  text-align: center;
 }
 
 .closed {

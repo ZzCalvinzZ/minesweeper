@@ -7,4 +7,4 @@ class GameForm(forms.Form):
       ('expert','expert'),
       )
     name = forms.CharField(label='Name', max_length=100)
-    difficulty = forms.ChoiceField(choices=DIFFICULTY, required=True, label="Difficulty")
+    difficulty = forms.ChoiceField(choices=DIFFICULTY, required=True)

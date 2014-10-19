@@ -1,0 +1,11 @@
+label {
+/*display: block;*/
+width: 150px;
+float: left;
+/*vertical-align:top;*/
+}
+
+select {
+  max-width:40%;
+}
+
