@@ -39,6 +39,7 @@ $(document).ready(function() {
     return true; 
   }); 
 
+  // send the request to check a single minefield
   function check(x, y){
 
     $.ajax({
@@ -68,6 +69,7 @@ $(document).ready(function() {
     });
   }
   
+  // send the request to set a flag
   function setFlag(x, y){
         $.ajax({
       url: window.location.pathname+ '/check',
@@ -85,6 +87,7 @@ $(document).ready(function() {
     });
   }
 
+  // send the request to check multiple fields
   function checkMultiple(x, y){
         $.ajax({
       url: window.location.pathname+ '/check',
@@ -114,6 +117,7 @@ $(document).ready(function() {
     });
   }
 
+  // updates the fields that have been changed
   function remap(response){
     for (var i=0; i<response.height; i++){
       for (var j=0; j<response.width; j++){
@@ -126,6 +130,7 @@ $(document).ready(function() {
     }
   }
 
+  // updates a single cell with it's new class and additional options if applicable
   function setNewAttr($cell, responseCell){
     $cell.removeClass().addClass(responseCell.attr)
 
@@ -147,10 +152,12 @@ $(document).ready(function() {
     }
   }
 
+  // tell the player they have lost
   function gameLost(){
     $('#complete').html("<p>You Lose! Sorry about that,<a href='/'>click here</a> to try again</p>")
   }
 
+  // tell the player they have won
   function gameWon(){
     $('#complete').html("<p>You Win! Congratulations,<a href='/'>click here</a> to try again</p>")
   }

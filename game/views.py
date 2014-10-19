@@ -16,7 +16,10 @@ def index(request):
       if not user:
         new_user = User(name=post['name'])
         new_user.save()
-      user = User.objects.get(name=post['name'])
+      try:
+        user = User.objects.get(name=post['name'])
+      except User.DoesNotExist:
+        return HttpResponse('database error', status=404)  
 
       #create the game including minefield then save it to database
       if post['difficulty'] == 'beginner':
@@ -38,7 +41,11 @@ def index(request):
 
 def game_start(request, name, game_id):
   #get the current game from the passed in game id
-  game = Game.objects.get(id=game_id)
+  try:
+    game = Game.objects.get(id=game_id)
+  except Game.DoesNotExist:
+    return HttpResponse('database error', status=404)  
+
   game_number = Game.objects.filter(user__name=name).count()
 
   if game.won or game.lost:
@@ -66,7 +73,6 @@ def game_start(request, name, game_id):
 def game_check(request, name, game_id):
   #get the current game data from session
   game_data = request.session['game_data']
-  game = Game.objects.get(id=game_id)
 
   x = int(request.GET.get('x'))
   y = int(request.GET.get('y'))

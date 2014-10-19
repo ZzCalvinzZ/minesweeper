@@ -100,7 +100,11 @@ def check_multiple_func(x, y, game_data):
 
 
 def player_loses(x, y, game_data):
-  game = Game.objects.get(id=game_data['game_id'])
+  try:
+    game = Game.objects.get(id=game_data['game_id'])
+  except Game.DoesNotExist:
+    return HttpResponse('database error', status=404) 
+    
   if _mine_exists(x, y, game_data): 
     _reveal_mines(game_data)
     game_data['revealed_matrix'][x][y]['attr'] = 'mine'
@@ -112,7 +116,11 @@ def player_loses(x, y, game_data):
     return False
 
 def check_for_win(x, y, game_data):
-  game = Game.objects.get(id=game_data['game_id'])
+  try:
+    game = Game.objects.get(id=game_data['game_id'])
+  except Game.DoesNotExist:
+    return HttpResponse('database error', status=404) 
+
   if game_data['fields_left'] == game_data['mines']:
     game_data['won'] = True
     game.won = True
