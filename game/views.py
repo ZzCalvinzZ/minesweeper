@@ -4,7 +4,7 @@ from game.forms import GameForm
 from game.models import Game, User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
-from game.functions import reveal, mine_exists, create_revealed_matrix, set_flag_func
+from game.functions import reveal, mine_exists, create_revealed_matrix, set_flag_func, reveal_mines
 
 def index(request):
   if request.method == 'POST':
@@ -76,9 +76,9 @@ def game_check(request, name, game_id):
     set_flag_func(x, y, game_data)
 
   elif mine_exists(x, y, game_data):
+    reveal_mines(game_data)
     game_data['revealed_matrix'][x][y]['attr'] = 'mine'
     game_data['lost'] = True
-
     game.lost = True
     game.save()
 

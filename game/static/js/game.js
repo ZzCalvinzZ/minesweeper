@@ -102,7 +102,7 @@ $(document).ready(function() {
         $cell.text(noOfMines);
       }
     }
-    else if ($cell.attr('class') === 'mine'){
+    else if ($cell.attr('class') === 'mine' || $cell.attr('class') === 'rev-mine'){
       $cell.text('@')
     }
     else if ($cell.attr('class') === 'flag'){

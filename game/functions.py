@@ -73,3 +73,9 @@ def set_flag_func(x, y, game_data):
     game_data['revealed_matrix'][x][y]['attr'] = 'flag'
   elif game_data['revealed_matrix'][x][y]['attr'] == 'flag':
     game_data['revealed_matrix'][x][y]['attr'] = 'closed'
+
+def reveal_mines(game_data):
+  for x in range(0, game_data['height']):
+    for y in range(0, game_data['width']):
+      if mine_exists(x, y, game_data):
+        game_data['revealed_matrix'][x][y]['attr'] = 'rev-mine'
