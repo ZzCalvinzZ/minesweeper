@@ -21,13 +21,19 @@ $(document).ready(function() {
 
   // when a field is right clicked set a flag
   $('#mine-field tbody tr td').mousedown(function(e){ 
-    var target = e.target;
-    //note x is row because the minefield is mapped as an array
-    var x = target.parentNode.rowIndex;
-    var y = target.cellIndex;
-
     if( e.button == 2 ) { 
-      setFlag(x, y);
+      var target = e.target;
+
+      //note x is row because the minefield is mapped as an array
+      var x = target.parentNode.rowIndex;
+      var y = target.cellIndex;
+
+      if ($(target).is('.empty1, .empty2, .empty3, .empty4, .empty5, .empty6, .empty7')){
+        checkMultiple(x, y);
+      }
+      else{
+        setFlag(x, y);
+      }
       return false; 
     } 
     return true; 
@@ -71,8 +77,36 @@ $(document).ready(function() {
         setFlag: true
       },
       success: function(response){
-        console.log(response);
         remap(response);        
+      },
+      error: function(response){
+        alert('something went wrong, please try again');
+      }
+    });
+  }
+
+  function checkMultiple(x, y){
+        $.ajax({
+      url: window.location.pathname+ '/check',
+      data: {
+        x: x,
+        y: y,
+        checkMultiple: true
+      },
+      success: function(response){
+        if (lost == false && win == false){
+          if (response.lost == true){
+            lost = true
+            gameLost();
+          } 
+
+          if (response.won == true){
+            win = true
+            gameWon();
+          } 
+
+          remap(response);        
+        }        
       },
       error: function(response){
         alert('something went wrong, please try again');

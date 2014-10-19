@@ -1,3 +1,5 @@
+from game.models import Game, User
+
 # Creates the matrix that keeps track of whats been revealed
 def create_revealed_matrix(height, width):
   revealed_matrix = []
@@ -79,3 +81,39 @@ def reveal_mines(game_data):
     for y in range(0, game_data['width']):
       if mine_exists(x, y, game_data):
         game_data['revealed_matrix'][x][y]['attr'] = 'rev-mine'
+
+def check_multiple_func(x, y, game_data):
+  coords = get_coords(x,y)
+  flag_exists = False
+  #first check if a flag exists anywhere adjacent
+  for pair in coords:
+    if not out_of_bounds(pair[0], pair[1], game_data):
+      if game_data['revealed_matrix'][pair[0]][pair[1]]['attr'] == 'flag':
+        flag_exists = True
+
+  if flag_exists:
+    for pair in coords:
+      if not out_of_bounds(pair[0], pair[1], game_data): 
+        if game_data['revealed_matrix'][pair[0]][pair[1]]['attr'] == 'closed':
+          if not player_loses(pair[0], pair[1], game_data):
+            reveal(pair[0], pair[1], game_data) 
+
+
+def player_loses(x, y, game_data):
+  game = Game.objects.get(id=game_data['game_id'])
+  if mine_exists(x, y, game_data): 
+    reveal_mines(game_data)
+    game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+    game_data['lost'] = True
+    game.lost = True
+    game.save()
+    return True
+  else:
+    return False
+
+def check_for_win(x, y, game_data):
+  game = Game.objects.get(id=game_data['game_id'])
+  if game_data['fields_left'] == game_data['mines']:
+    game_data['won'] = True
+    game.won = True
+    game.save()

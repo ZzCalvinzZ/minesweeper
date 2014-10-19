@@ -4,7 +4,7 @@ from game.forms import GameForm
 from game.models import Game, User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
-from game.functions import reveal, mine_exists, create_revealed_matrix, set_flag_func, reveal_mines
+from game.functions import reveal, mine_exists, create_revealed_matrix, set_flag_func, reveal_mines, check_multiple_func, player_loses, check_for_win
 
 def index(request):
   if request.method == 'POST':
@@ -71,24 +71,24 @@ def game_check(request, name, game_id):
   x = int(request.GET.get('x'))
   y = int(request.GET.get('y'))
   set_flag = bool(request.GET.get('setFlag'))
+  check_multiple = bool(request.GET.get('checkMultiple'))
 
+  # if the user wants to set a flag, only do this
   if set_flag:
     set_flag_func(x, y, game_data)
-
-  elif mine_exists(x, y, game_data):
-    reveal_mines(game_data)
-    game_data['revealed_matrix'][x][y]['attr'] = 'mine'
-    game_data['lost'] = True
-    game.lost = True
-    game.save()
-
+  # if the player is checking multiple fields at once via   
+  elif check_multiple:
+    check_multiple_func(x, y, game_data)
+  # check ONE field (the one the player has clicked) 
   else:
-    reveal(x, y, game_data) 
-    if game_data['fields_left'] == game_data['mines']:
-      game_data['won'] = True
-      game.won = True
-      game.save()
+    if not player_loses(x, y, game_data):
+      reveal(x, y, game_data) 
 
+  print game_data['fields_left'] == game_data['mines']
+  # Check for game win  
+  check_for_win(x, y, game_data)
+
+  #save the data back onto the session
   request.session['game_data'] = game_data
 
   return HttpResponse(json.dumps(game_data), mimetype='application/json')
