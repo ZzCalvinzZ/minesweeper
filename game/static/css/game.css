@@ -1,6 +1,7 @@
 table {
     border-collapse:collapse;
     margin: 0 auto;
+    cursor:default;
 }
 
 td {
@@ -32,7 +33,9 @@ p {
 }
 
 .flag {
-
+  border: outset 4px #5980E2;
+  background-color: #29458E;
+  color: red;
 }
 
 .empty0 {

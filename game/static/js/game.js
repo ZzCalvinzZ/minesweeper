@@ -1,8 +1,13 @@
- $(document).ready(function() {
+$(document).ready(function() {
 
   var lost = false
   var win = false
 
+  $('#mine-field').bind('contextmenu', function(e) {
+      return false;
+  }); 
+
+  // check the field when it is clicked
   $('#mine-field tbody tr td').click(function (e){
     var target = e.target;
     //note x is row because the minefield is mapped as an array
@@ -13,6 +18,20 @@
       check(x, y);
     }
   });
+
+  // when a field is right clicked set a flag
+  $('#mine-field tbody tr td').mousedown(function(e){ 
+    var target = e.target;
+    //note x is row because the minefield is mapped as an array
+    var x = target.parentNode.rowIndex;
+    var y = target.cellIndex;
+
+    if( e.button == 2 ) { 
+      setFlag(x, y);
+      return false; 
+    } 
+    return true; 
+  }); 
 
   function check(x, y){
 
@@ -38,11 +57,29 @@
         }
       },
       error: function(response){
-        alert(response.test);
+        alert('something went wrong, please try again');
       }
     });
   }
   
+  function setFlag(x, y){
+        $.ajax({
+      url: window.location.pathname+ '/check',
+      data: {
+        x: x,
+        y: y,
+        setFlag: true
+      },
+      success: function(response){
+        console.log(response);
+        remap(response);        
+      },
+      error: function(response){
+        alert('something went wrong, please try again');
+      }
+    });
+  }
+
   function remap(response){
     for (var i=0; i<response.height; i++){
       for (var j=0; j<response.width; j++){
@@ -65,8 +102,14 @@
         $cell.text(noOfMines);
       }
     }
-    if ($cell.attr('class') === 'mine'){
+    else if ($cell.attr('class') === 'mine'){
       $cell.text('@')
+    }
+    else if ($cell.attr('class') === 'flag'){
+      $cell.text('|>')
+    }
+    else if ($cell.attr('class') === 'closed'){
+      $cell.text('')
     }
   }
 

@@ -66,3 +66,10 @@ def get_coords(x, y):
     [x-1, y+1]
   ]
   return coords
+
+# set the flag, if its already set then change it to closed
+def set_flag_func(x, y, game_data):
+  if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
+    game_data['revealed_matrix'][x][y]['attr'] = 'flag'
+  elif game_data['revealed_matrix'][x][y]['attr'] == 'flag':
+    game_data['revealed_matrix'][x][y]['attr'] = 'closed'
