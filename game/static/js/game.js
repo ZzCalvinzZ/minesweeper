@@ -3,6 +3,23 @@ $(document).ready(function() {
   var lost = false
   var win = false
 
+  // if page is reloaded call check to retrieve revealed_matrix
+  $(function(){
+    $.ajax({
+      url: window.location.pathname+ '/check',
+      data:{
+        reloadData: true
+      },
+      success: function(response){
+          remap(response);        
+      },
+      error: function(response){
+        alert('something went wrong, please try again');
+      }
+    });
+  });
+
+
   $('#mine-field').bind('contextmenu', function(e) {
       return false;
   }); 

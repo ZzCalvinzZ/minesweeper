@@ -1,4 +1,5 @@
-from game.models import Game, User
+from game.models import Game, User, Coordinate
+from django.http import HttpResponse
 
 # Creates the matrix that keeps track of whats been revealed
 def create_revealed_matrix(height, width):
@@ -39,6 +40,7 @@ def reveal(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
     game_data['fields_left'] -= 1
   game_data['revealed_matrix'][x][y]['attr'] = 'empty' + str(game_data['revealed_matrix'][x][y]['count'])
+  _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
   
 #reveals an outer_block then calls to reveal more outer blocks
 def _reveal_outer_cell(x, y, game_data):
@@ -73,8 +75,10 @@ def _get_coords(x, y):
 def set_flag_func(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
     game_data['revealed_matrix'][x][y]['attr'] = 'flag'
+    _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
   elif game_data['revealed_matrix'][x][y]['attr'] == 'flag':
     game_data['revealed_matrix'][x][y]['attr'] = 'closed'
+    _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
 
 def _reveal_mines(game_data):
   for x in range(0, game_data['height']):
@@ -125,3 +129,12 @@ def check_for_win(x, y, game_data):
     game_data['won'] = True
     game.won = True
     game.save()
+
+def _update_coordinate(x, y, attr, game_id):
+  try:
+    game = Game.objects.get(id=game_id)
+  except Game.DoesNotExist:
+    return HttpResponse('database error', status=404)
+
+  coordinate = Coordinate(x=x, y=y, attr= attr, game=game)
+  coordinate.save()

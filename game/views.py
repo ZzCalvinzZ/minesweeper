@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from game.forms import GameForm
-from game.models import Game, User
+from game.models import Game, User, Coordinate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
 from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, player_loses, check_for_win
@@ -29,6 +29,7 @@ def index(request):
       elif post['difficulty'] == 'expert':
         game = Game(width=30,height=16,number_of_mines=99,difficulty='expert',user=user)
       game.create_minefield()
+      game.fields_left = game.width * game.height
       game.save()
 
       #redirect to the game page
@@ -40,6 +41,7 @@ def index(request):
   return render(request, 'index.html', {'form': form})
 
 def game_start(request, name, game_id):
+
   #get the current game from the passed in game id
   try:
     game = Game.objects.get(id=game_id)
@@ -61,38 +63,59 @@ def game_start(request, name, game_id):
     'width': game.width,
     'mine_field': game.get_minefield_array(),
     'revealed_matrix': create_revealed_matrix(game.height, game.width),
-    'fields_left' : game.width * game.height,
+    'fields_left' : game.fields_left,
     'game_number': game_number,
     'won' : False,
     'lost': False
   }
 
-  request.session['tested_coords'] = []
-  return render (request, 'game.html', request.session['game_data'])
+  response = request.session['game_data']
+
+  return render (request, 'game.html', response)
 
 def game_check(request, name, game_id):
+  try:
+    game = Game.objects.get(id=game_id)
+  except Game.DoesNotExist:
+    return HttpResponse('database error', status=404)  
+
   #get the current game data from session
   game_data = request.session['game_data']
-
-  x = int(request.GET.get('x'))
-  y = int(request.GET.get('y'))
+  print game_data['fields_left']
+  # get info from the get requests (if applicable)
+  if request.GET.get('x') != None: x = int(request.GET.get('x')) 
+  if request.GET.get('y') != None: y = int(request.GET.get('y')) 
   set_flag = bool(request.GET.get('setFlag'))
   check_multiple = bool(request.GET.get('checkMultiple'))
+  reload_data = bool(request.GET.get('reloadData'))
 
-  # if the user wants to set a flag, only do this
-  if set_flag:
-    set_flag_func(x, y, game_data)
-  # if the player is checking multiple fields at once via   
-  elif check_multiple:
-    check_multiple_func(x, y, game_data)
-  # check ONE field (the one the player has clicked) 
+  #populate the session coordinates with the coordinates from the database
+  if reload_data:
+    coordinates = Coordinate.objects.filter(game=game)
+    if coordinates.count > 0:
+      for coord in coordinates:
+        game_data['revealed_matrix'][coord.x][coord.y]['attr'] = coord.attr
+    game_data['fields_left'] = game.fields_left
+    print game_data['fields_left']
   else:
-    if not player_loses(x, y, game_data):
-      reveal(x, y, game_data) 
+    # if the user wants to set a flag, only do this
+    if set_flag:
+      set_flag_func(x, y, game_data)
+    # if the player is checking multiple fields at once via   
+    elif check_multiple:
+      check_multiple_func(x, y, game_data)
+    # check ONE field (the one the player has clicked) 
+    else:
+      if not player_loses(x, y, game_data):
+        reveal(x, y, game_data) 
 
-  print game_data['fields_left'] == game_data['mines']
-  # Check for game win  
-  check_for_win(x, y, game_data)
+    # Check for game win  
+    check_for_win(x, y, game_data)
+
+  #save the field left on database in case the game gets reloaded  
+  game.fields_left = game_data['fields_left']
+  game.save()
+  print game.fields_left
 
   #save the data back onto the session
   request.session['game_data'] = game_data

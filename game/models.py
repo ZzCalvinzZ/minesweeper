@@ -18,6 +18,7 @@ class Game(models.Model):
   user = models.ForeignKey(User)
   won = models.BooleanField(default=False)
   lost = models.BooleanField(default=False)
+  fields_left = models.IntegerField(default=0)
 
   # initialize a new game object setting the minefield
   # def __init__(self, x, y, number_of_mines, difficulty):
@@ -69,3 +70,9 @@ class Game(models.Model):
 
   def __unicode__(self):
     return self.difficulty
+
+class Coordinate(models.Model):
+  x = models.IntegerField(default=0)
+  y = models.IntegerField(default=0)
+  attr = models.CharField(max_length=10, default="closed")
+  game = models.ForeignKey(Game)
