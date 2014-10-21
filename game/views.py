@@ -4,7 +4,7 @@ from game.forms import GameForm
 from game.models import Game, User, Coordinate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
-from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, player_loses, check_for_win
+from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, player_loses, check_for_win, update_coordinates
 
 def index(request):
   if request.method == 'POST':

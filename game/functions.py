@@ -148,7 +148,7 @@ def update_coordinates(game_data):
     return HttpResponse('database error', status=404)
 
   bulk_data = []  
-  for coord in game_data['temp_coords']
-    bulk_data.append(Coordinate(x=coord.x,y=coord.y,attr=coord.attr,game=game))
+  for coord in game_data['temp_coords']:
+    bulk_data.append(Coordinate(x=coord['x'],y=coord['y'],attr=coord['attr'],game=game))
 
   Coordinate.objects.bulk_create(bulk_data)
