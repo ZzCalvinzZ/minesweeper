@@ -173,9 +173,11 @@ LOGGING = {
     }
 }
 
+# SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES['default'] =  dj_database_url.config(default='postgres://xhiljoblluhdrs:nj44r_cdJ-nPsKcSjCTnaGbDiI@ec2-54-225-124-205.compute-1.amazonaws.com:5432/d3bjf2ukumnt84')
+# DATABASES['default'] =  dj_database_url.config(default='postgres://xhiljoblluhdrs:nj44r_cdJ-nPsKcSjCTnaGbDiI@ec2-54-225-124-205.compute-1.amazonaws.com:5432/d3bjf2ukumnt84')
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

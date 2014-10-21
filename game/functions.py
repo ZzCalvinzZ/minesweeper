@@ -104,8 +104,12 @@ def check_multiple_func(x, y, game_data):
     for pair in coords:
       if not _out_of_bounds(pair[0], pair[1], game_data): 
         if game_data['revealed_matrix'][pair[0]][pair[1]]['attr'] == 'closed':
-          if mine_exists(x, y, game_data):
-            return 'lost'
+          print str(pair[0]) + "," + str(pair[1])
+          print game_data['mine_field'][pair[0]][pair[1]]
+          if mine_exists(pair[0],pair[1], game_data):
+            reveal_mines(game_data)
+            game_data['revealed_matrix'][pair[0]][pair[1]]['attr'] = 'mine'
+            return True
           else:  
             reveal(pair[0], pair[1], game_data) 
 

@@ -103,11 +103,10 @@ def game_check(request, name, game_id):
       set_flag_func(x, y, game_data)
     # if the player is checking multiple fields at once via   
     elif check_multiple:
-      if check_multiple_func(x, y, game_data) == 'lost':
-        reveal_mines(game_data)
-        game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+      if check_multiple_func(x, y, game_data):
         game_data['lost'] = True
         game.lost = True
+        print "hello"
     # check ONE field (the one the player has clicked) 
     else:
       if mine_exists(x, y, game_data): 
