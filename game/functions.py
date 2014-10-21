@@ -78,18 +78,12 @@ def _get_coords(x, y):
 
 # set the flag, if its already set then change it to closed
 def set_flag_func(x, y, game_data):
-  coord_info = {
-      'x':x,
-      'y':y,
-      'attr':game_data['revealed_matrix'][x][y]['attr']
-      }
-
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
     game_data['revealed_matrix'][x][y]['attr'] = 'flag'    
-    game_data['temp_coords'].append(coord_info)
+    game_data['temp_coords'].append({'x':x,'y':y,'attr':game_data['revealed_matrix'][x][y]['attr']})
   elif game_data['revealed_matrix'][x][y]['attr'] == 'flag':
     game_data['revealed_matrix'][x][y]['attr'] = 'closed'
-    game_data['temp_coords'].append(coord_info)
+    game_data['temp_coords'].append({'x':x,'y':y,'attr':game_data['revealed_matrix'][x][y]['attr']})
 
 def reveal_mines(game_data):
   for x in range(0, game_data['height']):
@@ -122,7 +116,6 @@ def update_coordinates(game_data):
     return HttpResponse('database error', status=404)
 
   bulk_data = []  
-
   for coord in game_data['temp_coords']:
     bulk_data.append(Coordinate(x=coord['x'],y=coord['y'],attr=coord['attr'],game=game))
   Coordinate.objects.bulk_create(bulk_data)
