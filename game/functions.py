@@ -12,7 +12,7 @@ def create_revealed_matrix(height, width):
   return revealed_matrix  
 
 #determines whether or not a mine exists in the coordinate
-def _mine_exists(x, y, game_data):
+def mine_exists(x, y, game_data):
   mine_field = game_data['mine_field']
   if mine_field[x][y] == 'M':
     return True
@@ -27,7 +27,7 @@ def reveal(x, y, game_data):
   #first check if a mine exists anywhere adjacent
   for pair in coords:
     if not _out_of_bounds(pair[0], pair[1], game_data):
-      if _mine_exists(pair[0], pair[1], game_data):
+      if mine_exists(pair[0], pair[1], game_data):
         game_data['revealed_matrix'][x][y]['count'] += 1
         recurse_more = False
 
@@ -50,7 +50,7 @@ def reveal(x, y, game_data):
 #reveals an outer_block then calls to reveal more outer blocks
 def _reveal_outer_cell(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
-    if _mine_exists(x, y, game_data):
+    if mine_exists(x, y, game_data):
       return
     else:
       game_data['revealed_matrix'][x][y]['attr'] = 'empty'
@@ -91,10 +91,10 @@ def set_flag_func(x, y, game_data):
     game_data['revealed_matrix'][x][y]['attr'] = 'closed'
     game_data['temp_coords'].append(coord_info)
 
-def _reveal_mines(game_data):
+def reveal_mines(game_data):
   for x in range(0, game_data['height']):
     for y in range(0, game_data['width']):
-      if _mine_exists(x, y, game_data):
+      if mine_exists(x, y, game_data):
         game_data['revealed_matrix'][x][y]['attr'] = 'rev-mine'
 
 def check_multiple_func(x, y, game_data):
@@ -110,36 +110,10 @@ def check_multiple_func(x, y, game_data):
     for pair in coords:
       if not _out_of_bounds(pair[0], pair[1], game_data): 
         if game_data['revealed_matrix'][pair[0]][pair[1]]['attr'] == 'closed':
-          if not player_loses(pair[0], pair[1], game_data):
+          if mine_exists(x, y, game_data):
+            return 'lost'
+          else:  
             reveal(pair[0], pair[1], game_data) 
-
-
-def player_loses(x, y, game_data):
-  try:
-    game = Game.objects.get(id=game_data['game_id'])
-  except Game.DoesNotExist:
-    return HttpResponse('database error', status=404) 
-    
-  if _mine_exists(x, y, game_data): 
-    _reveal_mines(game_data)
-    game_data['revealed_matrix'][x][y]['attr'] = 'mine'
-    game_data['lost'] = True
-    game.lost = True
-    game.save()
-    return True
-  else:
-    return False
-
-def check_for_win(x, y, game_data):
-  try:
-    game = Game.objects.get(id=game_data['game_id'])
-  except Game.DoesNotExist:
-    return HttpResponse('database error', status=404) 
-
-  if game_data['fields_left'] == game_data['mines']:
-    game_data['won'] = True
-    game.won = True
-    game.save()
 
 def update_coordinates(game_data):
   try:
@@ -148,7 +122,7 @@ def update_coordinates(game_data):
     return HttpResponse('database error', status=404)
 
   bulk_data = []  
+
   for coord in game_data['temp_coords']:
     bulk_data.append(Coordinate(x=coord['x'],y=coord['y'],attr=coord['attr'],game=game))
-
   Coordinate.objects.bulk_create(bulk_data)

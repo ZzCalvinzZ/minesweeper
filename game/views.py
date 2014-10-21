@@ -4,7 +4,7 @@ from game.forms import GameForm
 from game.models import Game, User, Coordinate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
-from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, player_loses, check_for_win, update_coordinates
+from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, update_coordinates, reveal_mines, mine_exists
 
 def index(request):
   if request.method == 'POST':
@@ -103,14 +103,25 @@ def game_check(request, name, game_id):
       set_flag_func(x, y, game_data)
     # if the player is checking multiple fields at once via   
     elif check_multiple:
-      check_multiple_func(x, y, game_data)
+      if check_multiple_func(x, y, game_data) == 'lost':
+        reveal_mines(game_data)
+        game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+        game_data['lost'] = True
+        game.lost = True
     # check ONE field (the one the player has clicked) 
     else:
-      if not player_loses(x, y, game_data):
+      if mine_exists(x, y, game_data): 
+        reveal_mines(game_data)
+        game_data['revealed_matrix'][x][y]['attr'] = 'mine'
+        game_data['lost'] = True
+        game.lost = True
+      else:
         reveal(x, y, game_data) 
 
     # Check for game win  
-    check_for_win(x, y, game_data)
+    if game_data['fields_left'] == game_data['mines']:
+      game_data['won'] = True
+      game.won = True
 
   #save the field left on database in case the game gets reloaded  
   game.fields_left = game_data['fields_left']
