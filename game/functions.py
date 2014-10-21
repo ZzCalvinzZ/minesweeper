@@ -40,7 +40,12 @@ def reveal(x, y, game_data):
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
     game_data['fields_left'] -= 1
   game_data['revealed_matrix'][x][y]['attr'] = 'empty' + str(game_data['revealed_matrix'][x][y]['count'])
-  _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
+  coord_info = {
+    'x':x,
+    'y':y,
+    'attr':game_data['revealed_matrix'][x][y]['attr']
+  }
+  game_data['temp_coords'].append(coord_info)
   
 #reveals an outer_block then calls to reveal more outer blocks
 def _reveal_outer_cell(x, y, game_data):
@@ -73,12 +78,18 @@ def _get_coords(x, y):
 
 # set the flag, if its already set then change it to closed
 def set_flag_func(x, y, game_data):
+  coord_info = {
+      'x':x,
+      'y':y,
+      'attr':game_data['revealed_matrix'][x][y]['attr']
+      }
+
   if game_data['revealed_matrix'][x][y]['attr'] == 'closed':
-    game_data['revealed_matrix'][x][y]['attr'] = 'flag'
-    _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
+    game_data['revealed_matrix'][x][y]['attr'] = 'flag'    
+    game_data['temp_coords'].append(coord_info)
   elif game_data['revealed_matrix'][x][y]['attr'] == 'flag':
     game_data['revealed_matrix'][x][y]['attr'] = 'closed'
-    _update_coordinate(x, y, game_data['revealed_matrix'][x][y]['attr'], game_data['game_id'])
+    game_data['temp_coords'].append(coord_info)
 
 def _reveal_mines(game_data):
   for x in range(0, game_data['height']):
@@ -130,11 +141,14 @@ def check_for_win(x, y, game_data):
     game.won = True
     game.save()
 
-def _update_coordinate(x, y, attr, game_id):
+def update_coordinates(game_data):
   try:
-    game = Game.objects.get(id=game_id)
+    game = Game.objects.get(id=game_data['game_id'])
   except Game.DoesNotExist:
     return HttpResponse('database error', status=404)
 
-  coordinate = Coordinate(x=x, y=y, attr= attr, game=game)
-  coordinate.save()
+  bulk_data = []  
+  for coord in game_data['temp_coords']
+    bulk_data.append(Coordinate(x=coord.x,y=coord.y,attr=coord.attr,game=game))
+
+  Coordinate.objects.bulk_create(bulk_data)

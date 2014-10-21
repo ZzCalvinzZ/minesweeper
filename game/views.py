@@ -65,6 +65,7 @@ def game_start(request, name, game_id):
     'revealed_matrix': create_revealed_matrix(game.height, game.width),
     'fields_left' : game.fields_left,
     'game_number': game_number,
+    'temp_coords': [],
     'won' : False,
     'lost': False
   }
@@ -81,7 +82,7 @@ def game_check(request, name, game_id):
 
   #get the current game data from session
   game_data = request.session['game_data']
-  print game_data['fields_left']
+
   # get info from the get requests (if applicable)
   if request.GET.get('x') != None: x = int(request.GET.get('x')) 
   if request.GET.get('y') != None: y = int(request.GET.get('y')) 
@@ -96,7 +97,6 @@ def game_check(request, name, game_id):
       for coord in coordinates:
         game_data['revealed_matrix'][coord.x][coord.y]['attr'] = coord.attr
     game_data['fields_left'] = game.fields_left
-    print game_data['fields_left']
   else:
     # if the user wants to set a flag, only do this
     if set_flag:
@@ -115,9 +115,13 @@ def game_check(request, name, game_id):
   #save the field left on database in case the game gets reloaded  
   game.fields_left = game_data['fields_left']
   game.save()
-  print game.fields_left
+
+  # update the coordinates in the database under one save operation
+  update_coordinates(game_data)
+  game_data['temp_coords'] = []
 
   #save the data back onto the session
   request.session['game_data'] = game_data
+
 
   return HttpResponse(json.dumps(game_data), mimetype='application/json')
