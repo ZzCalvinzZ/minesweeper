@@ -11,7 +11,7 @@
   <div class="small-6 small-centered columns">
     <form action="/" method="post">
       {% csrf_token %}
-      {{ form.as_table }}
+      {{ form.as_p }}
       <div>
         <input type="submit" value="Play!" />
       </div>
