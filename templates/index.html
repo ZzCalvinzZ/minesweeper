@@ -25,10 +25,10 @@
     <div id="beginner">
       <table>
         <h3>Beginner</h3>
-        <th>
-          <td><h4>Name</h4></td>
-          <td><h4>Wins</h4></td>
-        </th>
+        <tr>
+          <th><h4>Name</h4></th>
+          <th><h4>Wins</h4></th>
+        </tr>
         {% for user,value in beginner_dict.items %}
           <tr>
             <td>{{ user }}</td>
@@ -40,10 +40,10 @@
     <div id="expert">
       <table>
         <h3>Expert</h3>
-        <th>
-          <td><h4>Name</h4></td>
-          <td><h4>Wins</h4></td>
-        </th>
+        <tr>
+          <th><h4>Name</h4></th>
+          <th><h4>Wins</h4></th>
+        </tr>
         {% for user,value in expert_dict.items %}
           <tr>
             <td>{{ user }}</td>
@@ -55,10 +55,10 @@
     <div id="intermediate">
       <table class="inter_table">
         <h3>Intermediate</h3>
-        <th>
-          <td><h4>Name</h4></td>
-          <td><h4>Wins</h4></td>
-        </th>
+        <tr>
+          <th><h4>Name</h4></th>
+          <th><h4>Wins</h4></th>
+        </tr>
         {% for user,value in inter_dict.items %}
           <tr>
             <td>{{ user }}</td>
