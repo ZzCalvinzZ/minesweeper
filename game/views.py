@@ -4,7 +4,9 @@ from game.forms import GameForm
 from game.models import Game, User, Coordinate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils import simplejson as json
-from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, update_coordinates, reveal_mines, mine_exists
+from game.functions import reveal, create_revealed_matrix, set_flag_func, check_multiple_func, update_coordinates, reveal_mines, mine_exists, create_high_scores
+from itertools import chain
+from django.utils.datastructures import SortedDict
 
 def index(request):
   if request.method == 'POST':
@@ -38,7 +40,23 @@ def index(request):
   else:
     form = GameForm()
 
-  return render(request, 'index.html', {'form': form})
+    top_beginner_users = User.objects.filter(game__difficulty='beginner', game__won=True).order_by('game__won')
+    beginner_dict = create_high_scores(top_beginner_users)
+
+    top_inter_users = User.objects.filter(game__difficulty='intermediate', game__won=True)
+    inter_dict = create_high_scores(top_inter_users)
+
+    top_expert_users = User.objects.filter(game__difficulty='expert', game__won=True)
+    expert_dict = create_high_scores(top_expert_users)
+
+    response = {
+      'form': form, 
+      'beginner_dict': beginner_dict, 
+      'inter_dict': inter_dict,
+      'expert_dict': expert_dict
+      }
+    print response
+  return render(request, 'index.html', response)
 
 def game_start(request, name, game_id):
 

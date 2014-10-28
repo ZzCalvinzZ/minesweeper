@@ -1,5 +1,6 @@
 from game.models import Game, User, Coordinate
 from django.http import HttpResponse
+from django.utils.datastructures import SortedDict
 
 # Creates the matrix that keeps track of whats been revealed
 def create_revealed_matrix(height, width):
@@ -121,3 +122,20 @@ def update_coordinates(game_data):
   for coord in game_data['temp_coords']:
     bulk_data.append(Coordinate(x=coord['x'],y=coord['y'],attr=coord['attr'],game=game))
   Coordinate.objects.bulk_create(bulk_data)
+
+def create_high_scores(user_list):
+  temp_dict = SortedDict()
+  for user in user_list:
+    try:
+      temp_dict[user.name.encode('ascii','ignore')] += 1
+    except KeyError:
+      temp_dict[user.name.encode('ascii','ignore')] = 1
+
+  for user in User.objects.all():
+    try:
+      if temp_dict[user.name.encode('ascii','ignore')]:
+        pass
+    except KeyError:
+      temp_dict[user.name.encode('ascii','ignore')] = 0
+
+  return temp_dict      

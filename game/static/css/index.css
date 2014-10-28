@@ -2,8 +2,46 @@ h1{
   text-align: center;
 }
 
+h2{
+  text-align: center;
+}
+
+h3{
+  text-align: center;
+}
+
+h4{
+  text-align: center;
+}
+
 input[type="submit"] {
   /*display:block;*/
   text-align: center;
 /*  margin:0px auto;*/
+}
+
+td{
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+table {
+  margin: 0 auto;
+}
+
+#beginner{
+  float: left;
+}
+
+#intermediate{
+  margin:0 auto;
+  padding-top: 1px;
+}
+
+#expert{
+  float:right;
+}
+
+#scoreboard {
+  margin-top: 60px;
 }

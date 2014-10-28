@@ -18,4 +18,55 @@
     </table>
   </div>
 </div>
+
+<div id="scoreboard" class="row">
+  <div class="small-12 small-centered columns">
+    <h2>Top Players</h2>
+    <div id="beginner">
+      <table>
+        <h3>Beginner</h3>
+        <th>
+          <td><h4>Name</h4></td>
+          <td><h4>Wins</h4></td>
+        </th>
+        {% for user,value in beginner_dict.items %}
+          <tr>
+            <td>{{ user }}</td>
+            <td>{{ value }}</td>
+          </tr>
+        {% endfor %}  
+      </table>
+    </div>
+    <div id="expert">
+      <table>
+        <h3>Expert</h3>
+        <th>
+          <td><h4>Name</h4></td>
+          <td><h4>Wins</h4></td>
+        </th>
+        {% for user,value in expert_dict.items %}
+          <tr>
+            <td>{{ user }}</td>
+            <td>{{ value }}</td>
+          </tr>
+        {% endfor %}  
+      </table>
+    </div>
+    <div id="intermediate">
+      <table class="inter_table">
+        <h3>Intermediate</h3>
+        <th>
+          <td><h4>Name</h4></td>
+          <td><h4>Wins</h4></td>
+        </th>
+        {% for user,value in inter_dict.items %}
+          <tr>
+            <td>{{ user }}</td>
+            <td>{{ value }}</td>
+          </tr>
+        {% endfor %}  
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}
