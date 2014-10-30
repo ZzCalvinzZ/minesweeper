@@ -40,23 +40,21 @@ def index(request):
   else:
     form = GameForm()
 
-    top_beginner_users = User.objects.filter(game__difficulty='beginner', game__won=True).order_by('game__won')
-    beginner_dict = create_high_scores(top_beginner_users)
+  top_beginner_users = User.objects.filter(game__difficulty='beginner', game__won=True).order_by('game__won')
+  beginner_dict = create_high_scores(top_beginner_users)
 
-    top_inter_users = User.objects.filter(game__difficulty='intermediate', game__won=True)
-    inter_dict = create_high_scores(top_inter_users)
+  top_inter_users = User.objects.filter(game__difficulty='intermediate', game__won=True)
+  inter_dict = create_high_scores(top_inter_users)
 
-    top_expert_users = User.objects.filter(game__difficulty='expert', game__won=True)
-    expert_dict = create_high_scores(top_expert_users)
+  top_expert_users = User.objects.filter(game__difficulty='expert', game__won=True)
+  expert_dict = create_high_scores(top_expert_users)
 
-    response = {
+  return render(request, 'index.html', {
       'form': form, 
       'beginner_dict': beginner_dict, 
       'inter_dict': inter_dict,
       'expert_dict': expert_dict
-      }
-    print response
-  return render(request, 'index.html', response)
+      })
 
 def game_start(request, name, game_id):
 
