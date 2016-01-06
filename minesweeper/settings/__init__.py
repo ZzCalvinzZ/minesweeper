@@ -1,9 +1,9 @@
-# Django settings for minesweeper project.
+# Django settings for minesweeper project
+from .local import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # here() gives us file paths from the root of the system to the directory
 # holding the current file.
@@ -19,18 +19,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'minesweeper',                      # Or path to database file if using sqlite3.
-        # # The following settings are not used with sqlite3:
-        'USER': 'calvin',
-        'PASSWORD': 'calvin',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -92,9 +80,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'og3#3f0$zyuoup5&yhl6-c2$&e^3_j$kdv=!iv0zvii#yxby)&'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
