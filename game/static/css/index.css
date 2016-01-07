@@ -45,3 +45,7 @@ table {
 #scoreboard {
   margin-top: 60px;
 }
+
+.errorlist {
+  color: red;
+}
